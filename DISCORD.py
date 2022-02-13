@@ -26,6 +26,14 @@ client = discord.Client()
 
 
 
+@commands.Cog.listener()
+async def on_member_join(self,member):
+    ment = member.mention
+    await self.client.get_channel(800164896414629951).send(f"{ment} has a bull spirit!")
+    print(f"{member} has joined the server.")
+
+
+
 
 
 @client.event
