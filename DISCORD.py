@@ -10,11 +10,12 @@ from dotenv import load_dotenv
 from discord.ext import commands
 import yfinance as yf
 import datetime as dt
+from datetime import datetime
 import os
+import requests
 
 
 from matplotlib import pyplot as plt
-
 
 
 load_dotenv()
@@ -35,7 +36,7 @@ async def on_ready():
 @commands.Cog.listener()
 async def on_member_join(self,member):
     ment = member.mention
-    await self.client.get_channel(id).send(f"{ment} has a bull spirit!")
+    await self.client.get_channel(**).send(f"{ment} has a bull spirit!")
     print(f"{member} has joined the server.")
 
 
@@ -43,13 +44,39 @@ async def on_member_join(self,member):
 @client.event
 async def on_message(message):
 
+    url = ('https://newsapi.org/v2/top-headlines?')
+
+    parametros = {
+        'q': 'Crypto',
+        'from': datetime.now().strftime('%Y-%m-%d-%H:%M:%S'),
+        'pagesize': 30,
+        'apiKey': 'SECRET KEY'
+    }
+    response = requests.get(url, params=parametros)
+    response_json = response.json()
+
+
     start_date = "2010-2-2"
     end_date = date.today()
+
+    new = message.content
 
     stock = message.content
     cryptoInfo = message.content
     ayuda = message.content
     graph = message.content
+
+
+
+
+    if new != 0 and new == 'news crypto':
+        for i in response_json['articles']:
+            await message.channel.send(i['title'])
+
+
+
+
+
 
     if stock != 0 and stock.startswith("!"):
 
@@ -57,8 +84,6 @@ async def on_message(message):
 
         ticker = yf.download(stockOut, start_date, end_date)['Close'][0]
         
-        
-
         await message.channel.send(ticker)
         
 
@@ -85,10 +110,9 @@ async def on_message(message):
 
 
     elif ayuda == "help":
-        await message.channel.send("-----------------------------------🤖 𝐇𝐈 𝐌𝐘 𝐍𝐀𝐌𝐄 𝐈𝐒 𝐒𝐓𝐎𝐂𝐊𝐒𝐁𝐎𝐓 🤖------------------------------------\n\n ɪ ᴡɪʟʟ ꜱʜᴏᴡ ʏᴏᴜ ᴀʟʟ ᴍʏ ꜰᴜɴᴄᴛɪᴏɴᴀʟɪᴛɪᴇꜱ... \n\n【$】: 𝚠𝚛𝚒𝚝𝚒𝚗𝚐 $ + 𝚊𝚗𝚢 𝚌𝚛𝚢𝚙𝚝𝚘 𝚗𝚊𝚖𝚎 𝚒 𝚠𝚒𝚕𝚕 𝚊𝚞𝚝𝚘𝚖𝚊𝚝𝚒𝚌𝚊𝚕𝚕𝚢 𝚜𝚎𝚗𝚍 𝚢𝚘𝚞 𝚝𝚑𝚎 𝚘𝚏𝚒𝚌𝚒𝚊𝚕 𝚙𝚊𝚐𝚎 𝚘𝚏 𝚝𝚑𝚊𝚝 𝚌𝚛𝚢𝚙𝚝𝚘𝚌𝚞𝚛𝚛𝚎𝚗𝚌𝚢 𝚜𝚘 𝚢𝚘𝚞 𝚌𝚊𝚗 𝚕𝚎𝚊𝚛𝚗 𝚊𝚋𝚘𝚞𝚝 𝚒𝚝 \n\n【!】: 𝚠𝚛𝚒𝚝𝚒𝚗𝚐 ! + 𝚊𝚗𝚢 𝚜𝚝𝚘𝚌𝚔 𝚗𝚊𝚖𝚎 𝚠𝚒𝚕𝚕 𝚜𝚑𝚘𝚠 𝚢𝚘𝚞 𝚝𝚑𝚎 𝚌𝚞𝚛𝚛𝚎𝚗𝚝 𝚙𝚛𝚒𝚌𝚎 𝚘𝚏 𝚒𝚝 🤑 \n\n   .🄶🅁🄰🄿🄷 : 𝕨𝕣𝕚𝕥𝕚𝕟𝕘 .𝕘𝕣𝕒𝕡𝕙 + 𝕤𝕥𝕠𝕔𝕜𝕟𝕒𝕞𝕖 𝕨𝕚𝕝𝕝 𝕤𝕙𝕠𝕨 𝕪𝕠𝕦 𝕥𝕙𝕖 𝕘𝕣𝕒𝕡𝕙 𝕠𝕗 𝕥𝕙𝕖 𝕝𝕒𝕤𝕥 𝟙𝟘 𝕪𝕖𝕒𝕣𝕤❜ 𝕡𝕣𝕚𝕔𝕖𝕤 𝕠𝕗 𝕥𝕙𝕒𝕥 𝕤𝕥𝕠𝕔𝕜 \n\n ᴵᴹᴾᴼᴿᵀᴬᴺᵀ\n 𝘪𝘧 𝘺𝘰𝘶 𝘸𝘢𝘯𝘵 𝘵𝘰 𝘭𝘰𝘰𝘬 𝘧𝘰𝘳 𝘢 𝘤𝘳𝘺𝘱𝘵𝘰 𝘱𝘳𝘪𝘤𝘦 𝘺𝘰𝘶 𝘩𝘢𝘷𝘦 𝘵𝘰 𝘱𝘳𝘪𝘯𝘵 !*𝘤𝘳𝘺𝘱𝘵𝘰*-𝘜𝘚𝘋")
-
-
-client.run('TOKEN')
+        await message.channel.send("-----------------------------------🤖 𝐇𝐈 𝐌𝐘 𝐍𝐀𝐌𝐄 𝐈𝐒 𝐒𝐓𝐎𝐂𝐊𝐒𝐁𝐎𝐓 🤖------------------------------------\n\n ɪ ᴡɪʟʟ ꜱʜᴏᴡ ʏᴏᴜ ᴀʟʟ ᴍʏ ꜰᴜɴᴄᴛɪᴏɴᴀʟɪᴛɪᴇꜱ... \n\n【$】: 𝚠𝚛𝚒𝚝𝚒𝚗𝚐 $ + 𝚊𝚗𝚢 𝚌𝚛𝚢𝚙𝚝𝚘 𝚗𝚊𝚖𝚎 𝚒 𝚠𝚒𝚕𝚕 𝚊𝚞𝚝𝚘𝚖𝚊𝚝𝚒𝚌𝚊𝚕𝚕𝚢 𝚜𝚎𝚗𝚍 𝚢𝚘𝚞 𝚝𝚑𝚎 𝚘𝚏𝚒𝚌𝚒𝚊𝚕 𝚙𝚊𝚐𝚎 𝚘𝚏 𝚝𝚑𝚊𝚝 𝚌𝚛𝚢𝚙𝚝𝚘𝚌𝚞𝚛𝚛𝚎𝚗𝚌𝚢 𝚜𝚘 𝚢𝚘𝚞 𝚌𝚊𝚗 𝚕𝚎𝚊𝚛𝚗 𝚊𝚋𝚘𝚞𝚝 𝚒𝚝 \n\n【!】: 𝚠𝚛𝚒𝚝𝚒𝚗𝚐 ! + 𝚊𝚗𝚢 𝚜𝚝𝚘𝚌𝚔 𝚗𝚊𝚖𝚎 𝚠𝚒𝚕𝚕 𝚜𝚑𝚘𝚠 𝚢𝚘𝚞 𝚝𝚑𝚎 𝚌𝚞𝚛𝚛𝚎𝚗𝚝 𝚙𝚛𝚒𝚌𝚎 𝚘𝚏 𝚒𝚝 🤑 \n\n   .🄶🅁🄰🄿🄷 : 𝕨𝕣𝕚𝕥𝕚𝕟𝕘 .𝕘𝕣𝕒𝕡𝕙 + 𝕤𝕥𝕠𝕔𝕜𝕟𝕒𝕞𝕖 𝕨𝕚𝕝𝕝 𝕤𝕙𝕠𝕨 𝕪𝕠𝕦 𝕥𝕙𝕖 𝕘𝕣𝕒𝕡𝕙 𝕠𝕗 𝕥𝕙𝕖 𝕝𝕒𝕤𝕥 𝟙𝟘 𝕪𝕖𝕒𝕣𝕤❜ 𝕡𝕣𝕚𝕔𝕖𝕤 𝕠𝕗 𝕥𝕙𝕒𝕥 𝕤𝕥𝕠𝕔𝕜 \n\n ᴵᴹᴾᴼᴿᵀᴬᴺᵀ\n 𝘪𝘧 𝘺𝘰𝘶 𝘸𝘢𝘯𝘵 𝘵𝘰 𝘭𝘰𝘰𝘬 𝘧𝘰𝘳 𝘢 𝘤𝘳𝘺𝘱𝘵𝘰 𝘱𝘳𝘪𝘤𝘦 𝘺𝘰𝘶 𝘩𝘢𝘷𝘦 𝘵𝘰 𝘱𝘳𝘪𝘯𝘵 !*𝘤𝘳𝘺𝘱𝘵𝘰*-𝘜𝘚𝘋  \n\n if want to now about today news about crypto type: news crypto")
 
 
 
+
+client.run('SECRET KEY')
